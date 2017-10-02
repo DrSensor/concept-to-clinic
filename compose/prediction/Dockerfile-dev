@@ -7,5 +7,6 @@ RUN ln -s /usr/bin/python3.6 /usr/local/bin/python
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./prediction/requirements /requirements
 RUN pip install -r /requirements/local.txt
+COPY ./prediction/.pylidcrc /root/.pylidcrc
 
 WORKDIR /app

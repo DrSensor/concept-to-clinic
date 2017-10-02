@@ -1,15 +1,7 @@
-import glob
-
 import pylidc as pl
-from src.algorithms.identify.prediction import load_patient_images
 from src.preprocess.lung_segmentation import save_lung_segments, get_z_range
-
-
-def get_dicom_paths():
-    """Return DICOM paths to all LIDC direcotries
-    e.g. ['../images_full/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192']"""
-    return glob.glob("../images_full/LIDC-IDRI-*/**/**")
+from ..algorithms.segment.src.data_generation import get_dicom_paths
+from ..algorithms.identify.prediction import load_patient_images
 
 
 def test_lung_segmentation():
@@ -23,7 +15,8 @@ def test_lung_segmentation():
         directories = path.split('/')
         lidc_id = directories[2]
         patient_id = directories[-1]
-        original_shape, mask_shape = save_lung_segments(path, patient_id)
+        original, mask = save_lung_segments(path, patient_id)
+        original_shape, mask_shape = original.shape, mask.shape
         scan = pl.query(pl.Scan).filter(pl.Scan.patient_id == lidc_id).first()
         for annotation in scan.annotations:
             centroid_x, centroid_y, centroid_z = annotation.centroid()

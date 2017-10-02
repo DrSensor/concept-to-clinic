@@ -12,8 +12,7 @@ from keras.layers import Input, Convolution3D, MaxPooling3D, Flatten, AveragePoo
 from keras.metrics import binary_accuracy, binary_crossentropy, mean_absolute_error
 from keras.models import Model
 from keras.optimizers import SGD
-
-from . import helpers
+from src.preprocess.lung_segmentation import rescale_patient_images
 
 CUBE_SIZE = 32
 MEAN_PIXEL_VALUE = 41
@@ -180,11 +179,11 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):  # noqa
 
         patient_img = load_patient_images(patient_id, wildcard="*_i.png", exclude_wildcards=[])
         if magnification != 1:
-            patient_img = helpers.rescale_patient_images(patient_img, (1, 1, 1), magnification)
+            patient_img = rescale_patient_images(patient_img, (1, 1, 1), magnification)
 
         patient_mask = load_patient_images(patient_id, wildcard="*_m.png", exclude_wildcards=[])
         if magnification != 1:
-            patient_mask = helpers.rescale_patient_images(patient_mask, (1, 1, 1), magnification, is_mask_image=True)
+            patient_mask = rescale_patient_images(patient_mask, (1, 1, 1), magnification, is_mask_image=True)
 
         step = PREDICT_STEP
         CROP_SIZE = CUBE_SIZE
@@ -221,9 +220,6 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):  # noqa
                     if cube_mask.sum() < 2000:
                         skipped_count += 1
                     else:
-                        if CROP_SIZE != CUBE_SIZE:
-                            cube_img = helpers.rescale_patient_images2(cube_img, (CUBE_SIZE, CUBE_SIZE, CUBE_SIZE))
-
                         img_prep = prepare_image_for_net3D(cube_img)
                         batch_list.append(img_prep)
                         batch_list_coords.append((z, y, x))

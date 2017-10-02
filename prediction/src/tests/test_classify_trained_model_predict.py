@@ -15,11 +15,7 @@ def model_path():
 
 
 def test_classify_predict_model_load(dicom_path, model_path):
-    predicted = trained_model.predict(dicom_path,
-                                      [],
-                                      model_path,
-                                      preprocess_ct=None,
-                                      preprocess_model_input=None)
+    predicted = trained_model.predict(dicom_path, [], model_path, preprocess_ct=None, preprocess_model_input=None)
 
     assert len(predicted) == 0
 
