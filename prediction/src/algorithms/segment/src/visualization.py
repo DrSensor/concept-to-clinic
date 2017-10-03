@@ -15,8 +15,6 @@ def cuboid_show_slider(cuboid, axis=2, is_mask=False, **kwargs):
         axis: index of the axis that should be changeable using the slider
         is_mask: whether the cuboid that should be plotting is a binary mask
     """
-    import matplotlib.pyplot as plt
-    from matplotlib.widgets import Slider
 
     # check dim
     if not cuboid.ndim == 3:

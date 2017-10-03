@@ -6,25 +6,36 @@ import pylidc as pl
 
 
 def get_dicom_paths(in_docker=True):
-    """Return DICOM paths to all LIDC directories
+    """Return DICOM paths to all LIDC directories depending on whether Docker is used or not
     e.g. ['../images_full/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192']"""
+          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192']
+
+    Args:
+        in_docker: whether this method is invoked from within docker or from the prediction directory
+    """
     if in_docker:
-        return glob.glob("../images_full/LIDC-IDRI-*/**/**")
+        return glob.glob(os.path.join('..', 'images_full', 'LIDC-IDRI-*', '**', '**'))
     else:
-        return glob.glob("../tests/assets/test_image_data/full/LIDC-IDRI-*/**/**")
+        return glob.glob(os.path.join('..', 'tests', 'assets', 'test_image_data', 'full', 'LIDC-IDRI-*', '**', '**'))
 
 
-def prepare_training_data():
+def prepare_training_data(in_docker=True):
+    """Save a boolean mask of each DICOM scan at ../assets/segmented_lung_patient_{LIDC-ID}.npy that indicates whether
+    a pixel was annotate by an expert as at least intermediate malicious or not.
+
+    Args:
+        in_docker: whether this method is invoked from within docker or from the prediction directory
+    """
     INTERMEDIATE_MALICIOUS = 3
 
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    assets_dir = os.path.abspath(os.path.join(current_dir, '../assets'))
+    assets_dir = os.path.abspath(os.path.join(current_dir, '..', 'assets'))
 
-    dicom_paths = sorted(get_dicom_paths())
+    dicom_paths = sorted(get_dicom_paths(in_docker=in_docker))
     for path in dicom_paths:
         directories = path.split('/')
-        lidc_id = directories[2]
+        lidc_id_path_index = 2 if in_docker else 5
+        lidc_id = directories[lidc_id_path_index]
         lung_patient_file = os.path.join(assets_dir, "segmented_lung_patient_{}".format(lidc_id))
 
         if os.path.isfile(lung_patient_file):
