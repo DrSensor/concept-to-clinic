@@ -46,7 +46,7 @@ def prepare_training_data(in_docker=True):
         if scan is None:
             print("Scan for path '{}' was not found".format(path))
             continue
-        vol = scan.to_volume(verbose=False)
+        vol = scan.to_volume(verbose=False)  # Leading zeros have to be removed from the DICOM file names
 
         # mask_vol is a boolean, indicator volume for the first annotation of the scan.
         mask_vol = np.zeros(vol.shape, dtype=np.bool)
