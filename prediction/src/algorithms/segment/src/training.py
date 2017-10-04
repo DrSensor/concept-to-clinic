@@ -8,7 +8,7 @@ from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 from src.preprocess.lung_segmentation import save_lung_segments
 
-from .data_generation import get_dicom_paths
+from .data_generation import get_dicom_paths, get_assets_dir
 from .model import simple_model_3d
 
 
@@ -52,8 +52,7 @@ def train(load_checkpoint=False):
     CUBOID_IMAGE_SHAPE = get_data_shape()
     CUBOID_BATCH = 1  # How many training pairs should be passed to model.fit in one batch
 
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    assets_dir = os.path.abspath(os.path.join(current_dir, '../assets'))
+    assets_dir = get_assets_dir()
     dicom_paths = get_dicom_paths()
 
     labels = glob.glob(os.path.join(assets_dir, "segmented_lung_patient_*.npy"))
@@ -70,8 +69,9 @@ def train(load_checkpoint=False):
     for batch_index in range(0, len(labels), CUBOID_BATCH):
 
         for index, path in enumerate(dicom_paths[batch_index:batch_index + CUBOID_BATCH]):
-            lidc_id = path.split('/')[5]
-            patient_id = path.split('/')[-1]
+            directories = path.split(os.path.sep)
+            lidc_id = directories[5]
+            patient_id = directories[-1]
             _, input_img = save_lung_segments(path, patient_id)
             output_img = np.load(os.path.join(assets_dir, "segmented_lung_patient_{}.npy").format(lidc_id))
 
