@@ -13,10 +13,14 @@ from .model import simple_model_3d
 
 
 def get_data_shape():
-    dicom_paths = get_dicom_paths()
-    max_x, max_y, max_z = get_max_scaled_dimensions(dicom_paths)
+    # We need a fixed input (and thus output) size of the model. Something like taking the biggest spreads in every
+    # dimension would be possible but we would then be supposed to pad all images to this size. My 8 GB GPU memory was
+    # not enough for trying this with the 3D U-Net so I decided to temporarily set the shape to a smaller, fixed one.
+    # dicom_paths = get_dicom_paths()
+    # max_x, max_y, max_z = get_max_scaled_dimensions(dicom_paths)
+    # return max_x, max_y, max_z, 1
+
     return 128, 128, 128, 1  # TODO: dynamically crop shape based on maximal axes
-    return max_x, max_y, max_z, 1
 
 
 def get_best_model_path():
