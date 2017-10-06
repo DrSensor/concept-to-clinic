@@ -20,7 +20,7 @@ def get_data_shape():
     # max_x, max_y, max_z = get_max_scaled_dimensions(dicom_paths)
     # return max_x, max_y, max_z, 1
 
-    return 128, 128, 128, 1  # TODO: dynamically crop shape based on maximal axes
+    return 128, 128, 128, 1
 
 
 def get_best_model_path():
