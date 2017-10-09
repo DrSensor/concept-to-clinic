@@ -220,6 +220,8 @@ def predict_cubes(model_path, patient_id, magnification=1, ext_name=""):  # noqa
                     if cube_mask.sum() < 2000:
                         skipped_count += 1
                     else:
+                        # if you want to consider CROP_SIZE != CUBE_SIZE, see PR #147 for rescale_patient_images2 which
+                        # rescales input images to support this case
                         img_prep = prepare_image_for_net3D(cube_img)
                         batch_list.append(img_prep)
                         batch_list_coords.append((z, y, x))

@@ -14,16 +14,15 @@ def get_dicom_paths(in_docker=True):
         in_docker: whether this method is invoked from within docker or from the prediction directory
     """
     if in_docker:
-        paths = glob.glob(os.path.join('..', 'images_full', 'LIDC-IDRI-*', '**', '**'))
+        paths = glob.glob(os.path.join('/images_full', 'LIDC-IDRI-*', '**', '**'))
     else:
-        paths = glob.glob(os.path.join('..', 'tests', 'assets', 'test_image_data', 'full', 'LIDC-IDRI-*', '**', '**'))
+        paths = glob.glob(
+            os.path.join(os.getcwd(), 'src', 'tests', 'assets', 'test_image_data', 'full', 'LIDC-IDRI-*', '**', '**'))
     return paths
 
 
 def get_assets_dir():
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    return os.path.abspath(os.path.join(parent_dir, 'assets'))
+    return os.path.abspath(os.path.join(os.getcwd(), 'src', 'algorithms', 'segment', 'assets'))
 
 
 def prepare_training_data(in_docker=True):
