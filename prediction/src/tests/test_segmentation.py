@@ -1,14 +1,14 @@
 import os
 
 import pytest
-from src.algorithms.segment.src.data_generation import get_dicom_paths, get_assets_dir
+from config import Config
 
 from ..algorithms.segment import trained_model
 
 
 def test_correct_paths():
-    assert os.path.isdir(get_assets_dir())
-    for path in get_dicom_paths():
+    assert os.path.isdir(Config.SEGMENT_ASSETS_DIR)
+    for path in Config.DICOM_PATHS_DOCKER:
         assert os.path.isdir(path)
 
 
