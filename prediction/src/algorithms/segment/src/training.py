@@ -4,11 +4,11 @@ import os
 
 import numpy as np
 import pylidc as pl
+from config import Config
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 from src.preprocess.lung_segmentation import save_lung_segments
 
-from .data_generation import get_dicom_paths, get_assets_dir
 from .model import simple_model_3d
 
 
@@ -56,8 +56,8 @@ def train(load_checkpoint=False):
     CUBOID_IMAGE_SHAPE = get_data_shape()
     CUBOID_BATCH = 1  # How many training pairs should be passed to model.fit in one batch
 
-    assets_dir = get_assets_dir()
-    dicom_paths = get_dicom_paths()
+    assets_dir = Config.SEGMENT_ASSETS_DIR
+    dicom_paths = glob.glob(Config.DICOM_PATHS_DOCKER_WILDCARD)
 
     labels = glob.glob(os.path.join(assets_dir, "segmented_lung_patient_*.npy"))
 

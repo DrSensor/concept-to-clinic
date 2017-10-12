@@ -1,6 +1,7 @@
+import glob
 import pylidc as pl
 from src.preprocess.lung_segmentation import save_lung_segments, get_z_range
-from ..algorithms.segment.src.data_generation import get_dicom_paths
+from config import Config
 from ..algorithms.identify.prediction import load_patient_images
 
 
@@ -9,7 +10,7 @@ def test_lung_segmentation():
     Iterate over all local LIDC images, fetch the annotations, compute their positions within the masks and check that
     at this point the lung masks are set to 255."""
 
-    dicom_paths = get_dicom_paths()
+    dicom_paths = glob.glob(Config.DICOM_PATHS_DOCKER_WILDCARD)
     for path in dicom_paths:
         min_z, max_z = get_z_range(path)
         directories = path.split('/')

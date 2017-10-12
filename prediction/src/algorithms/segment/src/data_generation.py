@@ -3,26 +3,7 @@ import os
 
 import numpy as np
 import pylidc as pl
-
-
-def get_dicom_paths(in_docker=True):
-    """Return DICOM paths to all LIDC directories depending on whether Docker is used or not
-    e.g. ['../images_full/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
-          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192']
-
-    Args:
-        in_docker: whether this method is invoked from within docker or from the prediction directory
-    """
-    if in_docker:
-        paths = glob.glob(os.path.join('/images_full', 'LIDC-IDRI-*', '**', '**'))
-    else:
-        paths = glob.glob(
-            os.path.join(os.getcwd(), 'src', 'tests', 'assets', 'test_image_data', 'full', 'LIDC-IDRI-*', '**', '**'))
-    return paths
-
-
-def get_assets_dir():
-    return os.path.abspath(os.path.join(os.getcwd(), 'src', 'algorithms', 'segment', 'assets'))
+from config import Config
 
 
 def prepare_training_data(in_docker=True):
@@ -33,9 +14,10 @@ def prepare_training_data(in_docker=True):
         in_docker: whether this method is invoked from within docker or from the prediction directory
     """
     INTERMEDIATE_MALICIOUS = 3
-    assets_dir = get_assets_dir()
+    assets_dir = Config.SEGMENT_ASSETS_DIR
+    dicom_wildcard = Config.DICOM_PATHS_DOCKER_WILDCARD
 
-    dicom_paths = sorted(get_dicom_paths(in_docker=in_docker))
+    dicom_paths = sorted(glob.glob(dicom_wildcard))
     for path in dicom_paths:
         directories = path.split(os.path.sep)
         lidc_id_path_index = 2 if in_docker else 5

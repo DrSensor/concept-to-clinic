@@ -1,5 +1,5 @@
 import os
-
+import glob
 import pytest
 from config import Config
 
@@ -8,7 +8,7 @@ from ..algorithms.segment import trained_model
 
 def test_correct_paths():
     assert os.path.isdir(Config.SEGMENT_ASSETS_DIR)
-    for path in Config.DICOM_PATHS_DOCKER:
+    for path in glob.glob(Config.DICOM_PATHS_DOCKER_WILDCARD):
         assert os.path.isdir(path)
 
 
