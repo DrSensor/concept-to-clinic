@@ -12,9 +12,10 @@ import os
 import numpy as np
 import scipy.ndimage
 from keras.models import load_model
-from src.algorithms.segment.src.training import get_best_model_path, get_data_shape
-from src.algorithms.segment.src.model import dice_coef_loss, dice_coef
-from src.preprocess.load_ct import load_ct, MetaData
+
+from ...algorithms.segment.src.model import dice_coef_loss, dice_coef
+from ...algorithms.segment.src.training import get_best_model_path, get_data_shape
+from ...preprocess.load_ct import load_ct, MetaData
 
 
 def predict(dicom_path, centroids):
