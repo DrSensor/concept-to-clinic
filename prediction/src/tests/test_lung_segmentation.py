@@ -1,10 +1,21 @@
 import glob
 import pylidc as pl
-from src.preprocess.lung_segmentation import save_lung_segments, get_z_range
 from config import Config
-from ..algorithms.identify.prediction import load_patient_images
+import pytest
+from src.algorithms.identify.prediction import load_patient_images
+from src.preprocess.lung_segmentation import save_lung_segments, get_z_range
+
+from ..tests.test_endpoints import skip_slow_test
 
 
+def get_dicom_paths():
+    """Return DICOM paths to all LIDC direcotries
+    e.g. ['../images_full/LIDC-IDRI-0001/1.3.6.1.4.1.14519.5.2.1.6279.6001.298806137288633453246975630178/' \
+          '1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192']"""
+    return glob.glob("../images_full/LIDC-IDRI-*/**/**")
+
+
+@pytest.mark.skipif(skip_slow_test, reason='Takes very long')
 def test_lung_segmentation():
     """Test whether the annotations of the LIDC images are inside the segmented lung masks.
     Iterate over all local LIDC images, fetch the annotations, compute their positions within the masks and check that

@@ -1,30 +1,20 @@
 <template>
 <div class="card">
   <div class="card-header" @click="toggleShow(nodule)">
-    <p class="mb-0">
-      <b>Nodule {{ index + 1 }}</b>
-    </p>
+    <h1>Nodule {{ index + 1 }}</h1>
+    <span class="fa" :class="{
+        'fa-chevron-up' : isOpen,
+        'fa-chevron-down' : !isOpen
+      }"></span>
   </div>
 
   <div class="collapse" :class="{ show: isOpen }">
     <div class="card-block">
-      <table>
-        <tbody>
-        <tr>
-          <td>
-            <select v-model="selected">
-              <option disabled> -- select an option -- </option>
-              <option :value="lungOrientations.left">Left lung</option>
-              <option :value="lungOrientations.right">Right lung</option>
-            </select>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <br>
-      <a @click="update(nodule)">
-        <button type="button" class="btn btn-sm btn-secondary">Accept</button>
-      </a>
+      <!-- L: With the add-on-editor slot, this component can be
+              extended with a variety of foreign editor.
+            Check NoduleList for example usage
+          -->
+      <slot name="add-on-editor"></slot>
     </div>
   </div>
 </div>
@@ -48,13 +38,30 @@ export default {
       this.isOpen = !this.isOpen
     },
     update (nodule) {
-      this.$axios.put(nodule.url, { lung_orientation: this.selected }).then((response) => {
-        console.log(response)
-      },
-      () => {
-        // error callback
-      })
+      this.$axios.put(nodule.url, { lung_orientation: this.selected })
+        .then((response) => {
+          console.log(response)
+        })
+        .catch(() => {
+          // TODO: error callback
+        })
     }
   }
 }
 </script>
+
+<style lang="scss" scoped media="screen">
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 45px;
+  padding: 1em;
+
+  h1 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+  }
+}
+</style>
