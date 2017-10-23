@@ -4,12 +4,16 @@ import os
 
 import numpy as np
 import pylidc as pl
-from config import Config
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
-from src.preprocess.lung_segmentation import save_lung_segments
 
 from .model import simple_model_3d
+from ....preprocess.lung_segmentation import save_lung_segments
+
+try:
+    from .....config import Config
+except ValueError:
+    from config import Config
 
 
 def get_data_shape():
