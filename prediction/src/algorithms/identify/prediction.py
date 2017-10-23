@@ -160,11 +160,11 @@ def prepare_data(patient_id, magnification=1):
     """
     patient_img = load_patient_images(patient_id, wildcard="*_i.png", exclude_wildcards=[])
     if magnification != 1:
-        patient_img = helpers.rescale_patient_images(patient_img, (1, 1, 1), magnification)
+        patient_img = rescale_patient_images(patient_img, (1, 1, 1), magnification)
 
     patient_mask = load_patient_images(patient_id, wildcard="*_m.png", exclude_wildcards=[])
     if magnification != 1:
-        patient_mask = helpers.rescale_patient_images(patient_mask, (1, 1, 1), magnification, is_mask_image=True)
+        patient_mask = rescale_patient_images(patient_mask, (1, 1, 1), magnification, is_mask_image=True)
 
     predict_volume_shape_list = [0, 0, 0]
     for dim in range(3):
@@ -280,7 +280,7 @@ def annotate(model, predict_volume, patient_img, patient_mask):
             continue
 
         if CROP_SIZE != CUBE_SIZE:
-            cube_img = helpers.rescale_patient_images2(cube_img, (CUBE_SIZE, CUBE_SIZE, CUBE_SIZE))
+            cube_img = rescale_patient_images(cube_img, (CUBE_SIZE, CUBE_SIZE, CUBE_SIZE))
 
         # if you want to consider CROP_SIZE != CUBE_SIZE, see PR #147 for rescale_patient_images2 which
         # rescales input images to support this case
